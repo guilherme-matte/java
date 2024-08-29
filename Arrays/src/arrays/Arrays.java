@@ -29,7 +29,6 @@ public class Arrays {
             sub += matriz1[i];
 
         }
-        //-------------------------------
         System.out.println("---------------------");
         int sub1 = 0;
         for (int i = 4; i > -1; i--) {

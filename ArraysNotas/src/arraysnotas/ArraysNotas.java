@@ -24,7 +24,7 @@ public class ArraysNotas {
         for (int i = 0; i < matrizPrincipal.length; i++) {
 
             matrizPrincipal[i][0] = "Aluno " + (i + 1) + ": ";
-
+            System.out.println(i);
             for (int j = 1; j < matrizPrincipal[i].length; j++) {
                 switch (numRandom.nextInt(1, 4)) {
                     case 1:
@@ -64,7 +64,7 @@ public class ArraysNotas {
         System.out.println("\nMatriz completa:");
         for (int i = 0; i < matrizPrincipal.length; i++) {
             for (int j = 0; j < matrizPrincipal[i].length; j++) {
-                System.out.print(matrizPrincipal[i][j] + " ");
+                System.out.print(matrizPrincipal[i][j] + "|");
             }
             System.out.println();
         }

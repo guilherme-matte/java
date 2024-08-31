@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
  * @author 182320034
  */
 public class Conexao {
-    
-     public Connection getConexao() {
+
+    public Connection getConexao() {
         Connection c = null;
         try {
             String url = "jdbc:mysql://localhost:3306/pids_tech?user=root&password=";
@@ -27,5 +27,5 @@ public class Conexao {
         }//fecha o try catch
         return c;
     }//fecha o método getConexao
-    
+
 }//fecha clasee

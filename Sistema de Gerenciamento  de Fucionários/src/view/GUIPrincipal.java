@@ -4,8 +4,8 @@
  */
 package view;
 
-import java.awt.Dimension;
-import java.awt.desktop.ScreenSleepEvent;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import util.PosicaoLista;
@@ -68,6 +68,11 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
 
         jbtSair.setText("SAIR");
         jbtSair.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jbtSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtSairActionPerformed(evt);
+            }
+        });
 
         jdpAreadeTrabalho.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jdpAreadeTrabalho.setLayer(jbtCadastro, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -124,6 +129,19 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
         abrirCadastro();
     }//GEN-LAST:event_jbtCadastroActionPerformed
 
+    private void jbtSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtSairActionPerformed
+        UIManager.put("OptionPane.yesButtonText", "Sair do programa");
+
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
+
+        int resposta = JOptionPane.showConfirmDialog(null, "Deseja realmente sair?", "Confirmação", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (resposta == JOptionPane.YES_OPTION) {
+
+            System.exit(0);
+
+        }    }//GEN-LAST:event_jbtSairActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -160,14 +178,18 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
     }
 
     public void abrirLista() {
-        GUILista gl = new GUILista();
-        form.abrirTelaCentro(gl, jdpAreadeTrabalho);
-
+        if (!flagGUICadastro) {
+            GUILista gl = new GUILista();
+            form.abrirTelaCentro(gl, jdpAreadeTrabalho);
+            flagGUILista = true;
+            gl.addInternalFrameListener(this);
+        }
     }
 
     public void abrirCadastro() {
         GUICadastramento gc = new GUICadastramento();
         form.abrirTelaCentro(gc, jdpAreadeTrabalho);
+        flagGUICadastro = true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -190,8 +212,8 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
         if (e.getInternalFrame() instanceof GUILista) {
             flagGUILista = false;
         }
-        if (e.) {
-            
+        if (e.getInternalFrame() instanceof GUICadastramento) {
+            flagGUICadastro = false;
         }
     }
 

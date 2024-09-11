@@ -17,7 +17,7 @@ import util.PosicaoLista;
 public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameListener {
 
     PosicaoLista form = new PosicaoLista();
-    private boolean flagGUICadastro, flagGUILista;
+    private boolean flagGUICadastro = false, flagGUILista = false, flagGUIFolhadepagamento = false;
 
     /**
      * Creates new form GUIPrincipal
@@ -40,6 +40,7 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
         jbtCadastro = new javax.swing.JButton();
         jbtLista = new javax.swing.JButton();
         jbtSair = new javax.swing.JButton();
+        jbtFolhadepagamento = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -74,10 +75,19 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
             }
         });
 
+        jbtFolhadepagamento.setText("FOLHA DE PAGAMENTO");
+        jbtFolhadepagamento.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jbtFolhadepagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtFolhadepagamentoActionPerformed(evt);
+            }
+        });
+
         jdpAreadeTrabalho.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jdpAreadeTrabalho.setLayer(jbtCadastro, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jdpAreadeTrabalho.setLayer(jbtLista, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jdpAreadeTrabalho.setLayer(jbtSair, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jdpAreadeTrabalho.setLayer(jbtFolhadepagamento, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jdpAreadeTrabalhoLayout = new javax.swing.GroupLayout(jdpAreadeTrabalho);
         jdpAreadeTrabalho.setLayout(jdpAreadeTrabalhoLayout);
@@ -89,7 +99,8 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
                     .addComponent(jbtCadastro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1188, Short.MAX_VALUE)
                     .addComponent(jbtSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtLista, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jbtLista, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbtFolhadepagamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jdpAreadeTrabalhoLayout.setVerticalGroup(
@@ -97,7 +108,9 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
             .addGroup(jdpAreadeTrabalhoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
+                .addComponent(jbtFolhadepagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jbtLista, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jbtCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,6 +155,10 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
 
         }    }//GEN-LAST:event_jbtSairActionPerformed
 
+    private void jbtFolhadepagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtFolhadepagamentoActionPerformed
+        abrirGUIFolhadepagamento();
+    }//GEN-LAST:event_jbtFolhadepagamentoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -178,22 +195,39 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
     }
 
     public void abrirLista() {
-        if (!flagGUICadastro) {
+        if (flagGUILista == false) {
             GUILista gl = new GUILista();
             form.abrirTelaCentro(gl, jdpAreadeTrabalho);
             flagGUILista = true;
             gl.addInternalFrameListener(this);
+
         }
+
     }
 
     public void abrirCadastro() {
-        GUICadastramento gc = new GUICadastramento();
-        form.abrirTelaCentro(gc, jdpAreadeTrabalho);
-        flagGUICadastro = true;
+        if (flagGUICadastro == false) {
+            GUICadastramento gc = new GUICadastramento();
+            form.abrirTelaCentro(gc, jdpAreadeTrabalho);
+            flagGUICadastro = true;
+            gc.addInternalFrameListener(this);
+        }
+
+    }
+
+    public void abrirGUIFolhadepagamento() {
+        if (flagGUIFolhadepagamento == false) {
+            GUIFolhadepagamento gf = new GUIFolhadepagamento();
+            form.abrirTelaCentro(gf, jdpAreadeTrabalho);
+            flagGUIFolhadepagamento = true;
+            gf.addInternalFrameListener(this);
+        }
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton jbtCadastro;
+    private javax.swing.JButton jbtFolhadepagamento;
     private javax.swing.JButton jbtLista;
     private javax.swing.JButton jbtSair;
     private javax.swing.JDesktopPane jdpAreadeTrabalho;
@@ -214,6 +248,9 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
         }
         if (e.getInternalFrame() instanceof GUICadastramento) {
             flagGUICadastro = false;
+        }
+        if (e.getInternalFrame() instanceof GUIFolhadepagamento) {
+            flagGUIFolhadepagamento = false;
         }
     }
 

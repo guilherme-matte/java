@@ -46,6 +46,7 @@
                       <Component id="jLabel1" alignment="0" pref="1188" max="32767" attributes="0"/>
                       <Component id="jbtSair" alignment="0" max="32767" attributes="0"/>
                       <Component id="jbtLista" alignment="1" max="32767" attributes="0"/>
+                      <Component id="jbtFolhadepagamento" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -56,7 +57,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" pref="219" max="-2" attributes="0"/>
-                  <EmptySpace pref="276" max="32767" attributes="0"/>
+                  <EmptySpace pref="198" max="32767" attributes="0"/>
+                  <Component id="jbtFolhadepagamento" min="-2" pref="60" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jbtLista" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jbtCadastro" min="-2" pref="60" max="-2" attributes="0"/>
@@ -120,6 +123,19 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtSairActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jbtFolhadepagamento">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="FOLHA DE PAGAMENTO"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                <EtchetBorder/>
+              </Border>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtFolhadepagamentoActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

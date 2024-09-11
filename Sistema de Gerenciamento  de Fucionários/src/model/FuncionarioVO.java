@@ -10,7 +10,31 @@ package model;
  */
 public class FuncionarioVO {
     private String nome, cargo;
-    private float salario;
+    private float salario,vt,vr,plano;
+
+    public float getVt() {
+        return vt;
+    }
+
+    public void setVt(float vt) {
+        this.vt = vt;
+    }
+
+    public float getVr() {
+        return vr;
+    }
+
+    public void setVr(float vr) {
+        this.vr = vr;
+    }
+
+    public float getPlano() {
+        return plano;
+    }
+
+    public void setPlano(float plano) {
+        this.plano = plano;
+    }
     private int idFuncionario;
 
     public String getNome() {

@@ -18,26 +18,56 @@ import persistencia.Conexao;
  */
 public class CadastrarFuncionariosDAO {
 
-    public void cadastrarFuncionarios() {
-
-    }
-
-    public void preencherMatricula() throws SQLException {
+    public void cadastrarFuncionarios(FuncionarioVO fVO) throws SQLException {
         Connection con = new Conexao().getConexao();
         try {
-            String sql = "select * from empresa";
+            String sql = "insert into funcionarios values (?,?,?,?,?,?,?)";
+
+            PreparedStatement pstm = con.prepareStatement(sql);
+
+            pstm.setInt(1, fVO.getIdFuncionario());
+
+            pstm.setString(2, fVO.getNome());
+
+            pstm.setString(3, fVO.getCargo());
+
+            pstm.setFloat(4, fVO.getSalario());
+
+            pstm.setFloat(5, fVO.getVt());
+
+            pstm.setFloat(6, fVO.getVr());
+
+            pstm.setFloat(7, fVO.getPlano());
+
+            pstm.execute();
+            
+            pstm.close();
+            
+            JOptionPane.showMessageDialog(null, "ITEM CADASTRADO COM SUCESSO!");
+        } catch (SQLException se) {
+            JOptionPane.showMessageDialog(null, "ERRO - cadastrarFuncionarioDAO - " + se);
+        } finally {
+            con.close();
+        }
+    }
+
+    public FuncionarioVO preencherMatricula() throws SQLException {
+        Connection con = new Conexao().getConexao();
+        try {
+            String sql = "select * from funcionarios";
             PreparedStatement pstm = con.prepareStatement(sql);
 
             ResultSet rs = pstm.executeQuery();
             FuncionarioVO fVO = new FuncionarioVO();
-            if (rs.next()) {
+            while (rs.next()) {
 
-                fVO.setIdFuncionario(rs.getInt("idFuncionario"));
+                fVO.setIdFuncionario(rs.getInt("idFuncionarios"));
             }
-
+            return fVO;
         } catch (SQLException se) {
             JOptionPane.showMessageDialog(null, "ERRO - preencherMatricula - " + se.getMessage());
 
         }
+        return null;
     }
 }

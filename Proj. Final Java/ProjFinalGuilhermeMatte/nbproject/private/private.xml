@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/guilherme-matte/Documents/java/Proj.%20Final%20Java/ProjFinalGuilhermeMatte/src/persistencia/Conexao.java</file>
+            <file>file:/C:/Users/guilherme-matte/Documents/java/Proj.%20Final%20Java/ProjFinalGuilhermeMatte/src/dao/ColaboradoresDAO.java</file>
+            <file>file:/C:/Users/guilherme-matte/Documents/java/Proj.%20Final%20Java/ProjFinalGuilhermeMatte/src/view/GUIConsultaColaboradores.java</file>
+            <file>file:/C:/Users/guilherme-matte/Documents/java/Proj.%20Final%20Java/ProjFinalGuilhermeMatte/src/model/PessoaFisicaVO.java</file>
             <file>file:/C:/Users/guilherme-matte/Documents/java/Proj.%20Final%20Java/ProjFinalGuilhermeMatte/src/view/GUIPrincipal.java</file>
+            <file>file:/C:/Users/guilherme-matte/Documents/java/Proj.%20Final%20Java/ProjFinalGuilhermeMatte/src/dao/CadEmpresaDAO.java</file>
             <file>file:/C:/Users/guilherme-matte/Documents/java/Proj.%20Final%20Java/ProjFinalGuilhermeMatte/src/view/GUICadastro.java</file>
         </group>
     </open-files>

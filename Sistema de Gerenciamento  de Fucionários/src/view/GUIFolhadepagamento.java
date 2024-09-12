@@ -4,6 +4,10 @@
  */
 package view;
 
+import dao.FolhaDAO;
+import javax.swing.JOptionPane;
+import model.FuncionarioVO;
+
 /**
  *
  * @author guilherme-matte
@@ -15,6 +19,79 @@ public class GUIFolhadepagamento extends javax.swing.JInternalFrame {
      */
     public GUIFolhadepagamento() {
         initComponents();
+    }
+
+    public void preencherCampos() {
+
+        try {
+            FolhaDAO fDAO = new FolhaDAO();
+            FuncionarioVO fVO = new FuncionarioVO();
+
+            fVO = fDAO.pesquisarMatricula(Integer.parseInt(jtfPesquisa.getText()));
+
+            if (fVO.getIdFuncionario() == 0) {
+                JOptionPane.showMessageDialog(null, "Funcionário não encontrado");
+            } else {
+                jtfmatricula.setText(String.valueOf(fVO.getIdFuncionario()));
+                jtfNome.setText(fVO.getNome());
+
+                jtfCargo.setText(fVO.getCargo());
+                jtfSalario.setText("R$: " + String.valueOf(fVO.getSalario()).replace('.', ','));
+                Float salario = fVO.getSalario();
+                Float valeTransporte = 0f;
+                Float valeAlimentacao = 0f;
+                Float planoSaude = 0f;
+                if (fVO.getVt() == 0) {
+
+                    jtfVT.setText("Não tem");
+                } else {
+                    jtfVT.setText("R$: " + String.valueOf(fVO.getVt()).replace('.', ','));
+                    valeTransporte = fVO.getVt();
+                }
+
+                if (fVO.getVr() == 0) {
+                    jtfVT.setText("Não tem");
+
+                } else {
+                    jtfVA.setText("R$: " + String.valueOf(fVO.getVr()).replace('.', ','));
+                    valeAlimentacao = fVO.getVr();
+
+                }
+
+                if (fVO.getPlano() == 0) {
+
+                    jtfPlano.setText("Não tem");
+                } else {
+                    jtfPlano.setText("R$: " + String.valueOf(fVO.getPlano()).replace('.', ','));
+                    planoSaude = fVO.getPlano();
+                }
+                calcularFolha(salario, valeAlimentacao, valeTransporte, planoSaude);
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO COLETAR MATRICULA - " + e.getMessage());
+        }
+    }
+
+    public void calcularFolha(Float salario, Float vr, Float vt, Float plano) {
+        double alINSS = 0;
+        double parcela = 0;
+        double desconto=0f;
+        if (salario <= 1412) {
+            alINSS = 0.075;
+            desconto = (alINSS * salario);
+        } else if (salario > 1412 && salario <= 2666.68) {
+            alINSS = 0.09;
+            desconto = ((salario - 1412) * 0.09) + (1412 * 0.075);
+        } else if (salario > 2666.68 && salario <= 4000.03) {
+            alINSS = 0.12;
+            desconto = ((2666.68 - 1412) * 0.09) + (1412 * 0.075) + ((4000.03 - salario) * 0.12);
+        } else if (salario > 4000.03 && salario <= 7786.02) {
+            alINSS = 0.14;
+            desconto = ((2666.68 - 1412) * 0.09) + (1412 * 0.075) + ((4000.03 - 2666.69) * 0.12) + ((7786 - salario) * 0.14);
+
+        }
+        System.out.println(desconto);
     }
 
     /**
@@ -29,6 +106,21 @@ public class GUIFolhadepagamento extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jbtPesquisar = new javax.swing.JButton();
         jtfPesquisa = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jtfNome = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jtfmatricula = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jtfCargo = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jtfSalario = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jtfVT = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jtfVA = new javax.swing.JTextField();
+        Plano = new javax.swing.JLabel();
+        jtfPlano = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -37,6 +129,11 @@ public class GUIFolhadepagamento extends javax.swing.JInternalFrame {
         jLabel1.setText("Matrícula");
 
         jbtPesquisar.setText("Pesquisar");
+        jbtPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtPesquisarActionPerformed(evt);
+            }
+        });
 
         jtfPesquisa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -44,29 +141,144 @@ public class GUIFolhadepagamento extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Nome do Funcionário");
+
+        jtfNome.setEditable(false);
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Matrícula");
+
+        jtfmatricula.setEditable(false);
+        jtfmatricula.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("CARGO");
+
+        jtfCargo.setEditable(false);
+        jtfCargo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Salário");
+
+        jtfSalario.setEditable(false);
+        jtfSalario.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("VT");
+
+        jtfVT.setEditable(false);
+        jtfVT.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("VA");
+
+        jtfVA.setEditable(false);
+        jtfVA.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        Plano.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Plano.setText("Plano");
+
+        jtfPlano.setEditable(false);
+        jtfPlano.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfSalario, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfVT, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfVA, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Plano, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtfSalario, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtfVT)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtfVA)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtfPlano)
+                    .addComponent(Plano, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(172, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jtfPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jtfPesquisa, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                            .addComponent(jtfNome)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfmatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(jtfCargo, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jbtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(jtfPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jbtPesquisar))
-                .addContainerGap(535, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jtfPesquisa)
+                    .addComponent(jbtPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtfmatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtfCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jtfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -76,10 +288,33 @@ public class GUIFolhadepagamento extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfPesquisaActionPerformed
 
+    private void jbtPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtPesquisarActionPerformed
+        if ("".equals(jtfPesquisa.getText())) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo Matrícula");
+        } else {
+            preencherCampos();
+        }
+    }//GEN-LAST:event_jbtPesquisarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Plano;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jbtPesquisar;
+    private javax.swing.JTextField jtfCargo;
+    private javax.swing.JTextField jtfNome;
     private javax.swing.JTextField jtfPesquisa;
+    private javax.swing.JTextField jtfPlano;
+    private javax.swing.JTextField jtfSalario;
+    private javax.swing.JTextField jtfVA;
+    private javax.swing.JTextField jtfVT;
+    private javax.swing.JTextField jtfmatricula;
     // End of variables declaration//GEN-END:variables
 }

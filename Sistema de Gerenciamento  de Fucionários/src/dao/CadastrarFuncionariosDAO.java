@@ -40,9 +40,9 @@ public class CadastrarFuncionariosDAO {
             pstm.setFloat(7, fVO.getPlano());
 
             pstm.execute();
-            
+
             pstm.close();
-            
+
             //JOptionPane.showMessageDialog(null, "ITEM CADASTRADO COM SUCESSO!");
             System.out.println("CADASTRADO");
         } catch (SQLException se) {
@@ -68,6 +68,8 @@ public class CadastrarFuncionariosDAO {
         } catch (SQLException se) {
             JOptionPane.showMessageDialog(null, "ERRO - preencherMatricula - " + se.getMessage());
 
+        } finally {
+            con.close();
         }
         return null;
     }

@@ -74,7 +74,9 @@
                               <Component id="jtfPlano" alignment="0" pref="289" max="32767" attributes="0"/>
                               <Component id="jtfVT" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jbtAutomacao" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
@@ -123,8 +125,14 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jcbPlano" pref="55" max="32767" attributes="0"/>
-                      <Component id="jtfPlano" alignment="0" pref="55" max="32767" attributes="0"/>
+                      <Component id="jcbPlano" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jtfPlano" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
+                              <Component id="jbtAutomacao" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jbtCadastrar" min="-2" pref="54" max="-2" attributes="0"/>
@@ -285,6 +293,14 @@
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jbtAutomacao">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="AUTOMA&#xc7;&#xc2;O"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtAutomacaoActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

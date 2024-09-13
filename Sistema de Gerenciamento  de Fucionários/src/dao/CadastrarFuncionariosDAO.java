@@ -43,7 +43,8 @@ public class CadastrarFuncionariosDAO {
             
             pstm.close();
             
-            JOptionPane.showMessageDialog(null, "ITEM CADASTRADO COM SUCESSO!");
+            //JOptionPane.showMessageDialog(null, "ITEM CADASTRADO COM SUCESSO!");
+            System.out.println("CADASTRADO");
         } catch (SQLException se) {
             JOptionPane.showMessageDialog(null, "ERRO - cadastrarFuncionarioDAO - " + se);
         } finally {

@@ -5,15 +5,8 @@
 package view;
 
 import dao.CadastrarFuncionariosDAO;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import model.FuncionarioVO;
 
 /**
@@ -28,6 +21,7 @@ public class GUICadastramento extends javax.swing.JInternalFrame {
     public GUICadastramento() {
         initComponents();
         preencherMatricula();
+
     }
 
     public void preencherMatricula() {
@@ -68,6 +62,7 @@ public class GUICadastramento extends javax.swing.JInternalFrame {
         jtfVT = new javax.swing.JTextField();
         jtfPlano = new javax.swing.JTextField();
         jtfVA = new javax.swing.JTextField();
+        jbtAutomacao = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -148,6 +143,13 @@ public class GUICadastramento extends javax.swing.JInternalFrame {
         jtfVA.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jtfVA.setEnabled(false);
 
+        jbtAutomacao.setText("AUTOMAÇÂO");
+        jbtAutomacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtAutomacaoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -181,7 +183,9 @@ public class GUICadastramento extends javax.swing.JInternalFrame {
                             .addComponent(jtfVA, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtfPlano, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
                             .addComponent(jtfVT))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtAutomacao)
+                        .addGap(50, 50, 50))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(30, 30, 30)
@@ -219,8 +223,12 @@ public class GUICadastramento extends javax.swing.JInternalFrame {
                     .addComponent(jtfVA, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jcbPlano, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
-                    .addComponent(jtfPlano, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))
+                    .addComponent(jcbPlano, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jtfPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbtAutomacao))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbtCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -239,7 +247,45 @@ public class GUICadastramento extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-public void cadastrarFuncionario() {
+public void automacao(int quantidade) {
+        Random rdm = new Random();
+        for (int i = 0; i < quantidade; i++) {
+            jtfNomeFuncionario.setText("guilherme teste " + jtfMatricula.getText());
+            jtfSalario.setText(String.valueOf(rdm.nextDouble(1, 10000)));
+            jcbCargo.setSelectedIndex(rdm.nextInt(0, 3));
+
+            int bit = rdm.nextInt(0, 2);
+            if (bit == 1) {
+                jcbPlano.setSelected(true);
+                jtfPlano.setText(String.valueOf(rdm.nextDouble(0, 300)));
+            } else {
+                jtfPlano.setText("");
+                jcbPlano.setSelected(false);
+            }
+            bit = rdm.nextInt(0, 2);
+            if (bit == 1) {
+                jcbVA.setSelected(true);
+                jtfVA.setText(String.valueOf(rdm.nextDouble(0, 300)));
+            } else {
+                jtfVA.setText("");
+                jcbVA.setSelected(false);
+            }
+            bit = rdm.nextInt(0, 2);
+            if (bit == 1) {
+                jcbVT.setSelected(true);
+                jtfVT.setText(String.valueOf(rdm.nextDouble(0, 300)));
+            } else {
+                jtfVT.setText("");
+                jcbVT.setSelected(false);
+            }
+            cadastrarFuncionario();
+            limparCampos();
+        }
+JOptionPane.showMessageDialog(null, "CONCLUIDO");
+    }
+
+    public void cadastrarFuncionario() {
+
         try {
             FuncionarioVO fVO = new FuncionarioVO();
 
@@ -340,6 +386,13 @@ public void cadastrarFuncionario() {
         limparCampos();
     }//GEN-LAST:event_jbtLimparActionPerformed
 
+    private void jbtAutomacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtAutomacaoActionPerformed
+        int quantidade = Integer.parseInt(JOptionPane.showInputDialog("DIGITE A QUANTIDADE DE FUNCIONÁRIOS A SEREM GERADOS"));
+
+        automacao(quantidade);
+
+    }//GEN-LAST:event_jbtAutomacaoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -348,6 +401,7 @@ public void cadastrarFuncionario() {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton jbtAutomacao;
     private javax.swing.JButton jbtCadastrar;
     private javax.swing.JButton jbtLimpar;
     private javax.swing.JComboBox<String> jcbCargo;

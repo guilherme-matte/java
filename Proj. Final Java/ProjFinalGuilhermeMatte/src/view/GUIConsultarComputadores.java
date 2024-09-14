@@ -28,7 +28,7 @@ public class GUIConsultarComputadores extends javax.swing.JInternalFrame impleme
 
     DefaultTableModel dtmPessoaFisica = new DefaultTableModel(
             new Object[][]{},
-            new Object[]{"ID Produto", "CPF", "Nome Completo", "Quantidade","Categoria",  "Descrição"}
+            new Object[]{"ID Produto", "CPF", "Nome Completo", "Quantidade", "Categoria", "Descrição"}
     );
 
     /**
@@ -531,7 +531,6 @@ public class GUIConsultarComputadores extends javax.swing.JInternalFrame impleme
 
                 prod = cDAO.FiltrarProdutoEmpresa(opcao, pesquisa);
 
-                
                 for (int i = 0; i < prod.size(); i++) {
                     dtmEmpresa.addRow(new String[]{
                         String.valueOf(prod.get(i).getIdProduto()),

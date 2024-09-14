@@ -281,7 +281,7 @@ public void automacao(int quantidade) {
             cadastrarFuncionario();
             limparCampos();
         }
-JOptionPane.showMessageDialog(null, "CONCLUIDO");
+        JOptionPane.showMessageDialog(null, "CONCLUIDO");
     }
 
     public void cadastrarFuncionario() {

@@ -4,17 +4,48 @@
  */
 package view;
 
+import dao.ListarFuncionariosDAO;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.FuncionarioVO;
+
 /**
  *
  * @author guilherme-matte
  */
 public class GUILista extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form GUILista
-     */
+    DefaultTableModel dtmFuncionarios = new DefaultTableModel(
+            new Object[][]{},
+            new Object[]{"ID", "Funcionário", "Cargo", "Salário"}
+    );
+
     public GUILista() {
         initComponents();
+        jtbFuncionarios.setModel(dtmFuncionarios);
+        preencherTabela();
+    }
+
+    public void preencherTabela() {
+        try {
+            ListarFuncionariosDAO lDAO = new ListarFuncionariosDAO();
+
+            ArrayList<FuncionarioVO> funcionarios = new ArrayList<>();
+            funcionarios = lDAO.preencherLista();
+
+            for (int i = 0; i < funcionarios.size(); i++) {
+                dtmFuncionarios.addRow(new String[]{
+                    String.valueOf(funcionarios.get(i).getIdFuncionario()),
+                     String.valueOf(funcionarios.get(i).getNome()),
+                     String.valueOf(funcionarios.get(i).getCargo()),
+                     String.valueOf(funcionarios.get(i).getSalario())
+                });
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "ERRO AO PREENCHER TABELA FUNCIONARIOS - " + e.getMessage());
+        }
     }
 
     /**
@@ -28,7 +59,7 @@ public class GUILista extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtbFuncionarios = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jtfNomeFuncionario = new javax.swing.JTextField();
@@ -42,7 +73,7 @@ public class GUILista extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setResizable(true);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtbFuncionarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -53,13 +84,13 @@ public class GUILista extends javax.swing.JInternalFrame {
                 "ID", "Nome", "Cargo", "Salário"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jtbFuncionarios);
 
         jLabel1.setText("Nome do Funcionário");
 
         jLabel2.setText("ID do Funcionário");
 
-        jLabel3.setText("CARGO do Funcionário");
+        jLabel3.setText("Cargo do Funcionário");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Funcionário", "Estagiário", "Gerente" }));
 
@@ -145,8 +176,8 @@ public class GUILista extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JButton jbtAlterar;
+    private javax.swing.JTable jtbFuncionarios;
     private javax.swing.JTextField jtfIDFuncionario;
     private javax.swing.JTextField jtfNomeFuncionario;
     // End of variables declaration//GEN-END:variables

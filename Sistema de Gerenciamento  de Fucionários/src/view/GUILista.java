@@ -37,15 +37,25 @@ public class GUILista extends javax.swing.JInternalFrame {
             for (int i = 0; i < funcionarios.size(); i++) {
                 dtmFuncionarios.addRow(new String[]{
                     String.valueOf(funcionarios.get(i).getIdFuncionario()),
-                     String.valueOf(funcionarios.get(i).getNome()),
-                     String.valueOf(funcionarios.get(i).getCargo()),
-                     String.valueOf(funcionarios.get(i).getSalario())
+                    String.valueOf(funcionarios.get(i).getNome()),
+                    String.valueOf(funcionarios.get(i).getCargo()),
+                    String.valueOf(funcionarios.get(i).getSalario())
                 });
 
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO AO PREENCHER TABELA FUNCIONARIOS - " + e.getMessage());
         }
+    }
+
+    public void calcularSalarioTodos() {
+        double total = 0;
+        for (int i = 0; i < jtbFuncionarios.getRowCount(); i++) {
+
+             total += Double.parseDouble((String) jtbFuncionarios.getValueAt(i, 3));
+        }
+        System.out.println(jtbFuncionarios.getRowCount());
+        System.out.println(total);
     }
 
     /**
@@ -92,9 +102,15 @@ public class GUILista extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Cargo do Funcionário");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Funcionário", "Estagiário", "Gerente" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Funcionário", "Estagiário", "Gerente", "" }));
+        jComboBox1.setSelectedIndex(3);
 
         jbtAlterar.setText("Alterar");
+        jbtAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtAlterarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -166,6 +182,10 @@ public class GUILista extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jbtAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtAlterarActionPerformed
+        calcularSalarioTodos();
+    }//GEN-LAST:event_jbtAlterarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

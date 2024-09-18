@@ -52,30 +52,5 @@ public class FolhaDAO {
         return null;
     }
 
-    public FuncionarioVO pesquisarFuncionario(int id, String nome, int cargo) throws SQLException {
-        Connection con = new Conexao().getConexao();
-
-        try {
-            String cargoFuncionario;
-            switch (cargo) {
-                case 0:
-                  cargoFuncionario = "Funcionário";
-                    break;
-                case 1:
-                    cargoFuncionario = "Estagiário";
-                    break;
-                    case 2:
-                    cargoFuncionario = "Gerente";
-                    break;
-                    case 3:
-                    cargoFuncionario = "'Funcionário' or 'Estagiário' or 'Gerente'";
-                    break;
-            }
-        } catch (SQLException se) {
-            JOptionPane.showMessageDialog(null, "ERRO AO PESQUISAR FUNCIONARIO - "+se.getMessage());
-        } finally {
-            con.close();
-        }
-        return null;
-    }
+    
 }

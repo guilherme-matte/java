@@ -249,7 +249,7 @@ public class GUILista extends javax.swing.JInternalFrame {
 
         String id = jtbFuncionarios.getValueAt(linha, 0).toString();
 
-        System.out.println(id);
+        
     }//GEN-LAST:event_jbtAlterarActionPerformed
 
 

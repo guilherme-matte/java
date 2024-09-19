@@ -73,7 +73,7 @@ public class GUILista extends javax.swing.JInternalFrame {
                         String.valueOf(funcionarios.get(i).getNome()),
                         String.valueOf(funcionarios.get(i).getCargo()),
                         String.valueOf(funcionarios.get(i).getSalario())
-                   
+
                     });
                 }
             }
@@ -115,7 +115,8 @@ public class GUILista extends javax.swing.JInternalFrame {
         jtfIDFuncionario = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jcbCargo = new javax.swing.JComboBox<>();
-        Pesquisar = new javax.swing.JButton();
+        jbtPesquisar = new javax.swing.JButton();
+        jbtAlterar = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -148,10 +149,17 @@ public class GUILista extends javax.swing.JInternalFrame {
         jcbCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Funcionário", "Estagiário", "Gerente", "" }));
         jcbCargo.setSelectedIndex(3);
 
-        Pesquisar.setText("Alterar");
-        Pesquisar.addActionListener(new java.awt.event.ActionListener() {
+        jbtPesquisar.setText("Pesquisar");
+        jbtPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PesquisarActionPerformed(evt);
+                jbtPesquisarActionPerformed(evt);
+            }
+        });
+
+        jbtAlterar.setText("Alterar");
+        jbtAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtAlterarActionPerformed(evt);
             }
         });
 
@@ -159,10 +167,13 @@ public class GUILista extends javax.swing.JInternalFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Pesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jbtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -172,7 +183,7 @@ public class GUILista extends javax.swing.JInternalFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtfNomeFuncionario)
                             .addComponent(jtfIDFuncionario)
-                            .addComponent(jcbCargo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jcbCargo, 0, 342, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -191,7 +202,9 @@ public class GUILista extends javax.swing.JInternalFrame {
                     .addComponent(jLabel3)
                     .addComponent(jcbCargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Pesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbtAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -226,20 +239,29 @@ public class GUILista extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void PesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PesquisarActionPerformed
+    private void jbtPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtPesquisarActionPerformed
         limparLista();
         filtrarTabela();
-    }//GEN-LAST:event_PesquisarActionPerformed
+    }//GEN-LAST:event_jbtPesquisarActionPerformed
+
+    private void jbtAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtAlterarActionPerformed
+        int linha = jtbFuncionarios.getSelectedRow();
+
+        String id = jtbFuncionarios.getValueAt(linha, 0).toString();
+
+        System.out.println(id);
+    }//GEN-LAST:event_jbtAlterarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Pesquisar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbtAlterar;
+    private javax.swing.JButton jbtPesquisar;
     private javax.swing.JComboBox<String> jcbCargo;
     private javax.swing.JTable jtbFuncionarios;
     private javax.swing.JTextField jtfIDFuncionario;

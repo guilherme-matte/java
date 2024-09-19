@@ -56,54 +56,52 @@ public class ListarFuncionariosDAO {
 
     public ArrayList<FuncionarioVO> pesquisarFuncionario(int id, String nome, int cargo) throws SQLException {
         Connection con = new Conexao().getConexao();
+        StringBuilder sql = new StringBuilder("Select * from funcionarios where 1=1");
+        String pesquisaCargo = null;
+        ArrayList<FuncionarioVO> funcionario = new ArrayList<>();
+
+        switch (cargo) {
+            case 0:
+                pesquisaCargo = "Funcionário";
+                break;
+            case 1:
+                pesquisaCargo = "Estagiário";
+                break;
+            case 2:
+                pesquisaCargo = "Gerente";
+                break;
+            case 3:
+                pesquisaCargo = "('Funcionário', 'Estagiário' ,'Gerente')";
+                break;
+        }
+
+        if (id > 0) {
+            sql.append(" AND idFuncionarios = ?");
+        }
+        if (nome != null && !nome.isEmpty()) {
+            sql.append(" AND nomeFuncionario like ?");
+        }
+        if (pesquisaCargo != null && cargo != 3) {
+
+            sql.append(" AND cargoFuncionario = ?");
+        } else if (cargo == 3) {
+            sql.append(" AND cargoFuncionario in ").append(pesquisaCargo);
+        }
 
         try {
 
-            String pesquisaCargo = null;
-            switch (cargo) {
-                case 0:
-                    pesquisaCargo = "Funcionário";
-                    break;
-                case 1:
-                    pesquisaCargo = "Estagiário";
-                    break;
-                case 2:
-                    pesquisaCargo = "Gerente";
-                    break;
-                case 3:
-                    pesquisaCargo = "('Funcionário', 'Estagiário' ,'Gerente')";
-                    break;
-            }
-
-            StringBuilder sql = new StringBuilder("Select * from funcionarios where 1=1");
-
-            if (id > 0) {
-                sql.append(" AND idFuncionarios = ?");
-            }
-            if (nome != null && !nome.isEmpty()) {
-                sql.append(" AND nomeFuncionario like ?");
-            }
-            if (pesquisaCargo != null & cargo != 3) {
-
-                sql.append(" AND cargoFuncionario = ?");
-            } else if (cargo == 3) {
-                sql.append(" AND cargoFuncionario in ").append(pesquisaCargo);
-            }
-
             PreparedStatement pstm = con.prepareStatement(sql.toString());
-            int parametro = 1;
+            int indice = 1;
             if (id > 0) {
-                pstm.setInt(parametro++, id);
+                pstm.setInt(indice++, id);
             }
             if (nome != null && !nome.isEmpty()) {
-                pstm.setString(parametro++, "%" + nome + "%");
+                pstm.setString(indice++, "%" + nome + "%");
             }
-            if (pesquisaCargo != null & cargo != 3) {
-                pstm.setString(parametro++, pesquisaCargo);
+            if (pesquisaCargo != null && cargo != 3) {
+                pstm.setString(indice++, pesquisaCargo);
             }
             ResultSet rs = pstm.executeQuery();
-
-            ArrayList<FuncionarioVO> funcionario = new ArrayList<>();
 
             while (rs.next()) {
                 FuncionarioVO fVO = new FuncionarioVO();
@@ -120,7 +118,7 @@ public class ListarFuncionariosDAO {
             return funcionario;
 
         } catch (SQLException se) {
-            System.out.println(se.getMessage());
+            JOptionPane.showMessageDialog(null, "ERRO ListarFuncionariosDAO.pesquisarFuncionario - " + se.getMessage());
         } finally {
             con.close();
         }

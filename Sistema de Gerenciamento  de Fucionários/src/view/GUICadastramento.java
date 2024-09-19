@@ -373,9 +373,12 @@ public void automacao(int quantidade) {
         preencherMatricula();
         jtfNomeFuncionario.setText("");
         jtfPlano.setText("");
+        jtfPlano.setEnabled(false);
         jtfSalario.setText("");
         jtfVA.setText("");
+        jtfVA.setEnabled(false);
         jtfVT.setText("");
+        jtfVT.setEnabled(false);
         jcbCargo.setSelectedIndex(0);
         jcbPlano.setSelected(false);
         jcbVA.setSelected(false);

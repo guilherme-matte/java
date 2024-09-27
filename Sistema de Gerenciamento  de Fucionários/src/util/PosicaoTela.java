@@ -12,7 +12,7 @@ import javax.swing.JInternalFrame;
  *
  * @author guilherme-matte
  */
-public class PosicaoLista {
+public class PosicaoTela {
 
     public void abrirTelaCentro(JInternalFrame tela, JDesktopPane jdp) {
         int lDesk = jdp.getWidth();

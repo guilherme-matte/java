@@ -7,14 +7,18 @@ package view;
 import dao.ListarFuncionariosDAO;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.table.DefaultTableModel;
 import model.FuncionarioVO;
+import util.PosicaoTela;
+import static view.GUIPrincipal.jdpAreadeTrabalho;
 
 /**
  *
  * @author guilherme-matte
  */
-public class GUILista extends javax.swing.JInternalFrame {
+public class GUILista extends javax.swing.JInternalFrame implements InternalFrameListener {
 
     DefaultTableModel dtmFuncionarios = new DefaultTableModel(
             new Object[][]{},
@@ -243,13 +247,21 @@ public class GUILista extends javax.swing.JInternalFrame {
         limparLista();
         filtrarTabela();
     }//GEN-LAST:event_jbtPesquisarActionPerformed
+    public void abrirGUIAlterarFuncionario() {
+        GUIAlterarFuncionario gfa = new GUIAlterarFuncionario();
 
+        jdpAreadeTrabalho.add(gfa);
+        gfa.setVisible(true);
+        gfa.addInternalFrameListener(this);
+    }
     private void jbtAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtAlterarActionPerformed
         int linha = jtbFuncionarios.getSelectedRow();
-
         String id = jtbFuncionarios.getValueAt(linha, 0).toString();
+        PosicaoTela form = new PosicaoTela();
+        GUIAlterarFuncionario gaf = new GUIAlterarFuncionario();
 
-        
+        form.abrirTelaCentro(gaf, jdpAreadeTrabalho);
+        gaf.preencherCamposGAF(id);
     }//GEN-LAST:event_jbtAlterarActionPerformed
 
 
@@ -267,4 +279,32 @@ public class GUILista extends javax.swing.JInternalFrame {
     private javax.swing.JTextField jtfIDFuncionario;
     private javax.swing.JTextField jtfNomeFuncionario;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void internalFrameOpened(InternalFrameEvent e) {
+    }
+
+    @Override
+    public void internalFrameClosing(InternalFrameEvent e) {
+    }
+
+    @Override
+    public void internalFrameClosed(InternalFrameEvent e) {
+    }
+
+    @Override
+    public void internalFrameIconified(InternalFrameEvent e) {
+    }
+
+    @Override
+    public void internalFrameDeiconified(InternalFrameEvent e) {
+    }
+
+    @Override
+    public void internalFrameActivated(InternalFrameEvent e) {
+    }
+
+    @Override
+    public void internalFrameDeactivated(InternalFrameEvent e) {
+    }
 }

@@ -76,7 +76,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jtfMatricula" min="-2" pref="306" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jbtLimpar" min="-2" pref="123" max="-2" attributes="0"/>
+                          <Component id="jbtRestaurar" min="-2" pref="123" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -111,7 +111,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel3" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
                       <Component id="jtfMatricula" alignment="3" min="-2" pref="49" max="-2" attributes="0"/>
-                      <Component id="jbtLimpar" alignment="3" max="32767" attributes="0"/>
+                      <Component id="jbtRestaurar" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -264,12 +264,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtAlterarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jbtLimpar">
+        <Component class="javax.swing.JButton" name="jbtRestaurar">
           <Properties>
-            <Property name="text" type="java.lang.String" value="LIMPAR"/>
+            <Property name="text" type="java.lang.String" value="Restaurar"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtLimparActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtRestaurarActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">

@@ -44,7 +44,6 @@ public class AlterarFuncionarioDAO {
                 fVO.setVr(rs.getFloat("valeAlimentacao"));
                 fVO.setPlano(rs.getFloat("planoSaude"));
             }
-            System.out.println(fVO.getSalario());
             return fVO;
         } catch (SQLException se) {
             JOptionPane.showMessageDialog(null, "ERRO AO ALTERAR USUÁRIO - ALTERARFUNCIONARIODAO - " + se.getMessage());

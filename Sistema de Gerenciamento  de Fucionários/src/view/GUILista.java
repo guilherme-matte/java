@@ -256,12 +256,19 @@ public class GUILista extends javax.swing.JInternalFrame implements InternalFram
     }
     private void jbtAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtAlterarActionPerformed
         int linha = jtbFuncionarios.getSelectedRow();
-        String id = jtbFuncionarios.getValueAt(linha, 0).toString();
-        PosicaoTela form = new PosicaoTela();
-        GUIAlterarFuncionario gaf = new GUIAlterarFuncionario();
 
-        form.abrirTelaCentro(gaf, jdpAreadeTrabalho);
-        gaf.preencherCamposGAF(id);
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Favor Selecione um funcionário.");
+        } else {
+
+            String id = jtbFuncionarios.getValueAt(linha, 0).toString();
+            PosicaoTela form = new PosicaoTela();
+            GUIAlterarFuncionario gaf = new GUIAlterarFuncionario();
+
+            form.abrirTelaCentro(gaf, jdpAreadeTrabalho);
+
+            gaf.preencherCamposGAF(id);
+        }
     }//GEN-LAST:event_jbtAlterarActionPerformed
 
 

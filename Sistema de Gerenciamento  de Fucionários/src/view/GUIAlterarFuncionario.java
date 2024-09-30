@@ -43,7 +43,7 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
         jcbPlano = new javax.swing.JCheckBox();
         jcbVT = new javax.swing.JCheckBox();
         jbtAlterar = new javax.swing.JButton();
-        jbtLimpar = new javax.swing.JButton();
+        jbtRestaurar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jtfSalario = new javax.swing.JTextField();
         jtfVT = new javax.swing.JTextField();
@@ -109,10 +109,10 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
             }
         });
 
-        jbtLimpar.setText("LIMPAR");
-        jbtLimpar.addActionListener(new java.awt.event.ActionListener() {
+        jbtRestaurar.setText("Restaurar");
+        jbtRestaurar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtLimparActionPerformed(evt);
+                jbtRestaurarActionPerformed(evt);
             }
         });
 
@@ -153,7 +153,7 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jtfMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jbtLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jbtRestaurar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -178,7 +178,7 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtfMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbtLimpar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jbtRestaurar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -233,26 +233,80 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    FuncionarioVO fVO = new FuncionarioVO();
+
+    public void verificarJComboBox() {
+        int i = 0;
+        switch (fVO.getCargo()) {
+            case "Funcionário":
+                i = 0;
+                break;
+            case "Estagiário":
+                i = 1;
+                break;
+            case "Gerente":
+                i = 2;
+                break;
+        }
+        jcbCargo.setSelectedIndex(i);
+    }
+
+    public void verificarJCheckBox() {
+        //######################################################################
+        if (fVO.getPlano() > 0) {
+            jcbPlano.setSelected(true);
+            jtfPlano.setEnabled(true);
+            jtfPlano.setText(String.valueOf(fVO.getPlano()));
+        } else {
+            jcbPlano.setSelected(false);
+            jtfPlano.setEnabled(false);
+            jtfPlano.setText(null);
+        }
+        //######################################################################
+        if (fVO.getVr() > 0) {
+            jcbVA.setSelected(true);
+            jtfVA.setEnabled(true);
+            jtfVA.setText(String.valueOf(fVO.getVr()));
+        } else {
+            jcbVA.setSelected(false);
+            jtfVA.setEnabled(false);
+            jtfVA.setText(null);
+        }
+        //######################################################################
+        if (fVO.getVt() > 0) {
+            jcbVT.setSelected(true);
+            jtfVT.setEnabled(true);
+            jtfVT.setText(String.valueOf(fVO.getVt()));
+        } else {
+            jcbVT.setSelected(false);
+            jtfVT.setEnabled(false);
+            jtfVT.setText(null);
+        }
+        //######################################################################
+    }
+
     public void preencherCamposGAF(String id) {
         jtfMatricula.setText(id);
         AlterarFuncionarioDAO aDAO = new AlterarFuncionarioDAO();
-        FuncionarioVO fVO = new FuncionarioVO();
 
         try {
 
-            fVO = aDAO.PreencherCamposFuncinario(id);
+            this.fVO = aDAO.PreencherCamposFuncinario(id);
 
             jtfNomeFuncionario.setText(fVO.getNome());
             jtfSalario.setText(String.valueOf(fVO.getSalario()));
-            
-            if (fVO.getPlano() > 0 ) {
-                jcbPlano.set;
-                jtfPlano.setEnabled(true);
-                jtfPlano.setText(String.valueOf(fVO.getPlano()));
-            }
+            verificarJComboBox();
+            verificarJCheckBox();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERRO - " + e.getMessage());
         }
+    }
+
+    public void restaurarCampos() {
+        jtfNomeFuncionario.setText(fVO.getNome());
+        jtfSalario.setText(String.valueOf(fVO.getSalario()));
+        verificarJComboBox();
+        verificarJCheckBox();
     }
 
     public void alterarFuncionario() {
@@ -276,6 +330,7 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
             jtfPlano.setEnabled(false);
 
         }
+        jtfPlano.setText(null);
     }//GEN-LAST:event_jcbPlanoActionPerformed
 
     private void jcbVTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbVTActionPerformed
@@ -310,14 +365,16 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
         } else if (jcbPlano.isSelected() && jtfPlano.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Favor preencha ou desabilite o campo plano de saúde");
         } else {
-            limparCampos();
+            //limparCampos();
         }
 
     }//GEN-LAST:event_jbtAlterarActionPerformed
 
-    private void jbtLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtLimparActionPerformed
-        limparCampos();
-    }//GEN-LAST:event_jbtLimparActionPerformed
+    private void jbtRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtRestaurarActionPerformed
+        //limparCampos();
+
+        restaurarCampos();
+    }//GEN-LAST:event_jbtRestaurarActionPerformed
     public void abrirTela() {
         GUIAlterarFuncionario gaf = new GUIAlterarFuncionario();
         gaf.setVisible(true);
@@ -330,7 +387,7 @@ public class GUIAlterarFuncionario extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jbtAlterar;
-    private javax.swing.JButton jbtLimpar;
+    private javax.swing.JButton jbtRestaurar;
     private javax.swing.JComboBox<String> jcbCargo;
     private javax.swing.JCheckBox jcbPlano;
     private javax.swing.JCheckBox jcbVA;

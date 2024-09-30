@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
-import util.PosicaoLista;
+import util.PosicaoTela;
 
 /**
  *
@@ -16,7 +16,7 @@ import util.PosicaoLista;
  */
 public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameListener {
 
-    PosicaoLista form = new PosicaoLista();
+    PosicaoTela form = new PosicaoTela();
     private boolean flagGUICadastro = false, flagGUILista = false, flagGUIFolhadepagamento = false;
 
     /**
@@ -51,7 +51,7 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Sistema de Gerenciamento de Funcionários");
 
-        jbtCadastro.setText("CADASTRAR");
+        jbtCadastro.setText("CADASTRO");
         jbtCadastro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jbtCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,7 +230,7 @@ public class GUIPrincipal extends javax.swing.JFrame implements InternalFrameLis
     private javax.swing.JButton jbtFolhadepagamento;
     private javax.swing.JButton jbtLista;
     private javax.swing.JButton jbtSair;
-    private javax.swing.JDesktopPane jdpAreadeTrabalho;
+    public static javax.swing.JDesktopPane jdpAreadeTrabalho;
     // End of variables declaration//GEN-END:variables
 
     @Override

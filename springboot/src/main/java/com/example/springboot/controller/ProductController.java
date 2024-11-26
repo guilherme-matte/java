@@ -2,7 +2,9 @@ package com.example.springboot.controller;
 
 import com.example.springboot.dtos.ProductRecordDto;
 import com.example.springboot.models.ProductModel;
+import com.example.springboot.models.RateModel;
 import com.example.springboot.repositories.ProductRepository;
+import com.example.springboot.repositories.RateRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,13 +25,26 @@ public class ProductController {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    RateRepository rateRepository;
+
     @PostMapping("/products")
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
-        //Valid verifica se as validações no ProductRecordDto estão OK, caso não estejam, o metodo post não é executado
+        //@Valid verifica se as validações no ProductRecordDto estão OK, caso não estejam, o metodo post não é executado e retorna Bad Request
         var productModel = new ProductModel();
         BeanUtils.copyProperties(productRecordDto, productModel);//converte os dados da DTO para o MODEL
 
+        var savedProduct = productRepository.save(productModel);
+
+
+        var rateModel = new RateModel();
+        rateModel.setIdProduct(savedProduct.getIdproduct().toString());
+
+        rateModel.setName(savedProduct.getName());
+
+        rateRepository.save(rateModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
+
         //HTTPSTATUS retorna uma reposta do HTTP caso esteja OK
 
         //body armazena as informações json
@@ -66,7 +80,8 @@ public class ProductController {
     }
     @PutMapping("/products/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id")UUID id, @RequestBody @Valid ProductRecordDto ProductRecordDto) {
-    Optional<ProductModel> product0 = productRepository.findById(id);
+    //@PutMapping utilizado para atualização no banco, utilizando ID como parametro, passa pelo ProductRecordDto para validação dos campos
+        Optional<ProductModel> product0 = productRepository.findById(id);
     if (product0.isEmpty()){
         //caso a consulta retorne nada
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PRODUCT NOT FOUND");

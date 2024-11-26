@@ -10,3 +10,4 @@
 /Sistema de Gerenciamento  de Fucionários/build/
 springboot/src/main/resources/application.properties
 springboot/src/main/resources/application.properties
+*.properties

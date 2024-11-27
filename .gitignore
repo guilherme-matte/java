@@ -12,3 +12,4 @@ springboot/src/main/resources/application.properties
 springboot/src/main/resources/application.properties
 *.properties
 springboot/src/main/resources/application.properties
+/springboot/src/main/resources

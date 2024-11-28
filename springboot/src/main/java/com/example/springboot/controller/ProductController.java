@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -29,13 +30,32 @@ public class ProductController {
     RateRepository rateRepository;
 
     @PostMapping("/products")
-    public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
+    public ResponseEntity<ProductModel> saveProduct(@RequestPart("product") @Valid ProductRecordDto productRecordDto,
+                                                    @RequestPart("image") MultipartFile imageFile) {
         //@Valid verifica se as validações no ProductRecordDto estão OK, caso não estejam, o metodo post não é executado e retorna Bad Request
         var productModel = new ProductModel();
         BeanUtils.copyProperties(productRecordDto, productModel);//converte os dados da DTO para o MODEL
 
         var savedProduct = productRepository.save(productModel);
 
+        try {
+            if (!imageFile.isEmpty()) {
+                String uploadDir = "src/main/resources/images/";
+                String imageFileName = savedProduct.getIdproduct().toString() + "_" + imageFile.getOriginalFilename();
+                File saveFile = new File(uploadDir + imageFileName);
+                imageFile.transferTo(saveFile);
+                String imageUrl = "/images/" + imageFileName;
+                savedProduct.setImageUrl(imageUrl);
+                System.out.println(uploadDir);
+                System.out.println(imageFileName);
+                System.out.println(saveFile);
+                System.out.println(imageUrl);
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+        productRepository.save(savedProduct);
 
         var rateModel = new RateModel();
         rateModel.setIdProduct(savedProduct.getIdproduct().toString());
@@ -51,56 +71,68 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductModel>>getAllProducts(){
-    List<ProductModel> productList = productRepository.findAll();
+    public ResponseEntity<List<Map<String, Object>>> getAllProducts() {
+        List<ProductModel> productList = productRepository.findAll();
+        List<Map<String, Object>> response = new ArrayList<>();
 
-    if (!productList.isEmpty()){
-        for (ProductModel product : productList){
-            UUID id = product.getIdproduct();
-            product.add(linkTo(methodOn(ProductController.class).getOneProduct(id)).withSelfRel());
+        for (ProductModel productModel : productList) {
+            Map<String, Object> productData = new HashMap<>();
 
+            productData.put("id", productModel.getIdproduct());
+            productData.put("name", productModel.getName());
+            productData.put("value", productModel.getValue());
+
+//            if (productModel.getImage() != null) {
+//                String base64Image = Base64.getEncoder().encodeToString(productModel.getImage());
+//
+//                productData.put("image", base64Image);
+//            } else {
+//                productData.put("image", null);
+//            }
+            response.add(productData);
         }
-    }
-    //LinkTo  -adicionado ao produto, o link para acesso o getById
-            return ResponseEntity.status(HttpStatus.OK).body(productList);
+        //LinkTo  -adicionado ao produto, o link para acesso o getById
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id")UUID id){
+    public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
         //object pois terão dois tipos diferentes de retorno
         //PathVariable serve para pegar valores diretamente da URL passando o parametro "id"
         Optional<ProductModel> product0 = productRepository.findById(id);
-        if (product0.isEmpty()){
-        //verifica se a consulta retorna nada
+        if (product0.isEmpty()) {
+            //verifica se a consulta retorna nada
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PRODUCT NOT FOUND");
 
         }
-    product0.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Products List"));
+        product0.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Products List"));
         return ResponseEntity.status(HttpStatus.OK).body(product0.get());
     }
+
     @PutMapping("/products/{id}")
-    public ResponseEntity<Object> updateProduct(@PathVariable(value = "id")UUID id, @RequestBody @Valid ProductRecordDto ProductRecordDto) {
-    //@PutMapping utilizado para atualização no banco, utilizando ID como parametro, passa pelo ProductRecordDto para validação dos campos
+    public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id, @RequestBody @Valid ProductRecordDto ProductRecordDto) {
+        //@PutMapping utilizado para atualização no banco, utilizando ID como parametro, passa pelo ProductRecordDto para validação dos campos
         Optional<ProductModel> product0 = productRepository.findById(id);
-    if (product0.isEmpty()){
-        //caso a consulta retorne nada
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PRODUCT NOT FOUND");
+        if (product0.isEmpty()) {
+            //caso a consulta retorne nada
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PRODUCT NOT FOUND");
 
+        }
+
+        var productModel = product0.get();
+
+
+        BeanUtils.copyProperties(ProductRecordDto, productModel);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(productRepository.save(productModel));
     }
 
-    var productModel = product0.get();
-
-
-    BeanUtils.copyProperties(ProductRecordDto,productModel);
-
-
-    return ResponseEntity.status(HttpStatus.OK).body(productRepository.save(productModel));
-    }
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id){
+    public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id) {
 
         Optional<ProductModel> product0 = productRepository.findById(id);
-        if (product0.isEmpty()){
+        if (product0.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PRODUCT NOT FOUND");
 
         }

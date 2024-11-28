@@ -5,6 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +19,8 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private UUID idproduct;
     private String name;
     private BigDecimal value;
+
+    private String imageUrl;
 
     public UUID getIdproduct() {
         return idproduct;
@@ -43,5 +46,11 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
         this.value = value;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

@@ -17,7 +17,6 @@ public class RateController {
     @GetMapping("/products/{id}/rate")
     public ResponseEntity<Object> getRateByProductId(@PathVariable(value = "id") String idProduct) {
         Optional<RateModel> rate = rateRepository.findByIdProduct(idProduct);
-        System.out.println(rate);
         if (rate.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(rate.get());
         } else {
@@ -29,7 +28,6 @@ public class RateController {
     @PutMapping("/rate/{id}")
     public ResponseEntity<Object> insertRate(@PathVariable(value = "id") String idProduct, @RequestBody RateModel newRateData) {
         Optional<RateModel> rate = rateRepository.findByIdProduct(idProduct);
-        System.out.println(rate);
         if (rate.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR - 1372");
         } else {

@@ -5,9 +5,11 @@ import com.example.springboot.models.ProductModel;
 import com.example.springboot.models.RateModel;
 import com.example.springboot.repositories.ProductRepository;
 import com.example.springboot.repositories.RateRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,52 +24,77 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class ProductController {
+    private String getFileExtension(String fileName) {
+        if (fileName == null || !fileName.contains(".")) {
+            return "";
+        } else {
+            return fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+        }
+    }
 
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
     @Autowired
     ProductRepository productRepository;
 
     @Autowired
     RateRepository rateRepository;
 
-    @PostMapping("/products")
-    public ResponseEntity<ProductModel> saveProduct(@RequestPart("product") @Valid ProductRecordDto productRecordDto,
+    @PostMapping(value = "/products", consumes = {"multipart/form-data"})
+    public ResponseEntity<ProductModel> saveProduct(@RequestPart("product") String productJson,
                                                     @RequestPart("image") MultipartFile imageFile) {
         //@Valid verifica se as validações no ProductRecordDto estão OK, caso não estejam, o metodo post não é executado e retorna Bad Request
-        var productModel = new ProductModel();
-        BeanUtils.copyProperties(productRecordDto, productModel);//converte os dados da DTO para o MODEL
 
-        var savedProduct = productRepository.save(productModel);
 
         try {
-            if (!imageFile.isEmpty()) {
-                String uploadDir = "src/main/resources/images/";
-                String imageFileName = savedProduct.getIdproduct().toString() + "_" + imageFile.getOriginalFilename();
+            ObjectMapper objectMapper = new ObjectMapper();
+            ProductRecordDto productRecordDto = objectMapper.readValue(productJson, ProductRecordDto.class);
+            var productModel = new ProductModel();
+            BeanUtils.copyProperties(productRecordDto, productModel);//converte os dados da DTO para o MODEL
+            productModel.setExtensionImage(getFileExtension(imageFile.getOriginalFilename()));
+            var savedProduct = productRepository.save(productModel);
+
+            try {
+
+                String imageFileName = savedProduct.getIdproduct().toString() + getFileExtension(imageFile.getOriginalFilename());
+
+                File directory = new File(uploadDir);
+
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
                 File saveFile = new File(uploadDir + imageFileName);
                 imageFile.transferTo(saveFile);
-                String imageUrl = "/images/" + imageFileName;
+                String imageUrl = imageFileName;
                 savedProduct.setImageUrl(imageUrl);
                 System.out.println(uploadDir);
                 System.out.println(imageFileName);
                 System.out.println(saveFile);
                 System.out.println(imageUrl);
+
+            } catch (IOException e) {
+                System.out.println("Mensagem " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+
+            productRepository.save(savedProduct);
+
+            var rateModel = new RateModel();
+            rateModel.setIdProduct(savedProduct.getIdproduct().toString());
+
+            rateModel.setName(savedProduct.getName());
+
+            rateRepository.save(rateModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
+
+            //HTTPSTATUS retorna uma reposta do HTTP caso esteja OK
+
+            //body armazena as informações json
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        productRepository.save(savedProduct);
-
-        var rateModel = new RateModel();
-        rateModel.setIdProduct(savedProduct.getIdproduct().toString());
-
-        rateModel.setName(savedProduct.getName());
-
-        rateRepository.save(rateModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productRepository.save(productModel));
-
-        //HTTPSTATUS retorna uma reposta do HTTP caso esteja OK
-
-        //body armazena as informações json
     }
 
     @GetMapping("/products")
@@ -78,17 +105,11 @@ public class ProductController {
         for (ProductModel productModel : productList) {
             Map<String, Object> productData = new HashMap<>();
 
-            productData.put("id", productModel.getIdproduct());
+            productData.put("idProduct", productModel.getIdproduct());
             productData.put("name", productModel.getName());
             productData.put("value", productModel.getValue());
-
-//            if (productModel.getImage() != null) {
-//                String base64Image = Base64.getEncoder().encodeToString(productModel.getImage());
-//
-//                productData.put("image", base64Image);
-//            } else {
-//                productData.put("image", null);
-//            }
+            productData.put("image_url", productModel.getImageUrl());
+    
             response.add(productData);
         }
         //LinkTo  -adicionado ao produto, o link para acesso o getById

@@ -109,7 +109,7 @@ public class ProductController {
             productData.put("name", productModel.getName());
             productData.put("value", productModel.getValue());
             productData.put("image_url", productModel.getImageUrl());
-    
+
             response.add(productData);
         }
         //LinkTo  -adicionado ao produto, o link para acesso o getById
@@ -155,8 +155,25 @@ public class ProductController {
         Optional<ProductModel> product0 = productRepository.findById(id);
         if (product0.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PRODUCT NOT FOUND");
+        }
+        ProductModel product = product0.get();
+        String imageUrl = product.getImageUrl();
+
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            File imageFile = new File(uploadDir + imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
+    if (imageFile.exists()){
+        if (imageFile.delete());
+    }
+        }
+
+        Optional<RateModel> rate0 = rateRepository.findByIdProduct(id.toString());
+
+        if (rate0.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PRODUCT NOT FOUND");
 
         }
+
+        rateRepository.delete(rate0.get());
         productRepository.delete(product0.get());
         return ResponseEntity.status(HttpStatus.OK).body("PRODUCT DELETED SUCCESSFULLY");
     }

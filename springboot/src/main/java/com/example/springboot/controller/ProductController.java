@@ -159,9 +159,15 @@ public class ProductController {
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
             File imageFile = new File(uploadDir + imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
-    if (imageFile.exists()){
-        if (imageFile.delete());
-    }
+            if (imageFile.exists()) {
+                if (imageFile.delete()) {
+                    System.out.println("Arquivo " + imageFile.getAbsolutePath() + "deletado com sucesso");
+                } else {
+                    System.out.println("Falha ao deletar arquivo " + imageFile.getAbsolutePath());
+                }
+            } else {
+                System.out.println("imagem não encontrada");
+            }
         }
 
         Optional<RateModel> rate0 = rateRepository.findByIdProduct(id.toString());

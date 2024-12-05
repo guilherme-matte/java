@@ -67,12 +67,10 @@ public class ProductController {
 
                 File saveFile = new File(uploadDir + imageFileName);
                 imageFile.transferTo(saveFile);
-                String imageUrl = imageFileName;
-                savedProduct.setImageUrl(imageUrl);
+                savedProduct.setImageUrl(imageFileName);
                 System.out.println(uploadDir);
                 System.out.println(imageFileName);
                 System.out.println(saveFile);
-                System.out.println(imageUrl);
 
             } catch (IOException e) {
                 System.out.println("Mensagem " + e.getMessage());

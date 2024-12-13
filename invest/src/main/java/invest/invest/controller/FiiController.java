@@ -45,7 +45,7 @@ public class FiiController {
     @GetMapping("/get/{siglaFii}")
     public ResponseEntity<Object> getOneFii(@PathVariable(value = "siglaFii") String siglaFii) {
         Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
-var valorCota = ValorCota
+var valorCota = CalcularValorCota.calcularCota(fiiRepository.getPl(),fiiRepository.getNumCotas());
         try {
             if (fii.isPresent()) {
                 return ResponseEntity.status(HttpStatus.OK).body(fii.get());

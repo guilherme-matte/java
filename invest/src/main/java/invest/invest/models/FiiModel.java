@@ -12,7 +12,7 @@ public class FiiModel extends RepresentationModel<FiiModel> implements Serializa
         private static  final long serialVersionUID = 1l;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 
     private UUID idFii;
     private String siglaFii;

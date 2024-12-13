@@ -21,16 +21,17 @@ public class FiiController {
         * Este metodo receberá um JSON no formato:
         * {
             "pl":*RECEBE PATRIMONIO LIQUIDO DO FII(FLOAT)* ,
-            "nome_fii": "*RECEBE O NOME SOCIAL DO FII(STRING)*",
-            "num_COTAS":"*RECEBE O NUMERO DE COTAS EMITIDAS(INT)*"
-            "sigla_fii":"*RECEBE A SILGA DO FII(STRING)*",
-            "tipo":"*RECEBE O TIPO DO FII, TIJOLo, FIAGRO OU PAPEL*"
+            "nomeFii": "*RECEBE O NOME SOCIAL DO FII(STRING)*",
+            "numCOTAS":"*RECEBE O NUMERO DE COTAS EMITIDAS(INT)*"
+            "siglaFii":"*RECEBE A SILGA DO FII(STRING)*",
+            "tipo":"*RECEBE O TIPO DO FII, TIJOLO, FIAGRO OU PAPEL*"
         *  }
         *
         */
 
         try {
             FiiModel savedFii = fiiRepository.save(fiiModel);
+            System.out.println("Funcionou poha_1");
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFii);
 
 

@@ -3,6 +3,7 @@ package invest.invest.controller;
 import invest.invest.dto.FiiResponseDTO;
 import invest.invest.models.CalcularCota;
 import invest.invest.models.FiiModel;
+import invest.invest.models.TransacaoFii;
 import invest.invest.repositories.FiiRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +52,12 @@ public class FiiController {
             if (selectedFii.isPresent()) {
                 FiiModel fii = selectedFii.get();
 
-        CalcularCota cotaValor = new CalcularCota();
+                CalcularCota cotaValor = new CalcularCota();
 
 
-        float valorCota = cotaValor.calcularCota(fii.getPL(), fii.getNumCotas());
+                float valorCota = cotaValor.calcularCota(fii.getPL(), fii.getNumCotas());
 
-                FiiResponseDTO response = new FiiResponseDTO(fii,valorCota);
+                FiiResponseDTO response = new FiiResponseDTO(fii, valorCota);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FII NÃO ENCONTRADO!");
@@ -68,17 +69,16 @@ public class FiiController {
     }
 
     @PutMapping("/buy/{siglaFii}")
-    public ResponseEntity<FiiModel> compraCota(@PathVariable(value = "siglaFii") String siglaFii) {
+    public ResponseEntity<FiiModel> compraCota(@PathVariable(value = "siglaFii") String siglaFii, @RequestPart("cotas") int numCotas, @RequestPart("valorCota") float valorCota) {
         Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
+        System.out.println(fii + "OPTIONAL");
         try {
-            if (fii.isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(fiiRepository.save(fii.get()));
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+            return null;//fins de teste
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 }

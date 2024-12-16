@@ -1,5 +1,7 @@
 package invest.invest.controller;
 
+import invest.invest.dto.FiiResponseDTO;
+import invest.invest.models.CalcularCota;
 import invest.invest.models.FiiModel;
 import invest.invest.repositories.FiiRepository;
 import jakarta.validation.constraints.NotNull;
@@ -44,11 +46,18 @@ public class FiiController {
 
     @GetMapping("/get/{siglaFii}")
     public ResponseEntity<Object> getOneFii(@PathVariable(value = "siglaFii") String siglaFii) {
-        Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
-var valorCota = CalcularValorCota.calcularCota(fiiRepository.getPl(),fiiRepository.getNumCotas());
+        Optional<FiiModel> selectedFii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
         try {
-            if (fii.isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(fii.get());
+            if (selectedFii.isPresent()) {
+                FiiModel fii = selectedFii.get();
+
+        CalcularCota cotaValor = new CalcularCota();
+
+
+        float valorCota = cotaValor.calcularCota(fii.getPL(), fii.getNumCotas());
+
+                FiiResponseDTO response = new FiiResponseDTO(fii,valorCota);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FII NÃO ENCONTRADO!");
             }

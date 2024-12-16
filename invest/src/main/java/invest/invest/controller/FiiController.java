@@ -3,9 +3,7 @@ package invest.invest.controller;
 import invest.invest.dto.FiiResponseDTO;
 import invest.invest.models.CalcularCota;
 import invest.invest.models.FiiModel;
-import invest.invest.models.TransacaoFii;
 import invest.invest.repositories.FiiRepository;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,11 +67,21 @@ public class FiiController {
     }
 
     @PutMapping("/buy/{siglaFii}")
-    public ResponseEntity<FiiModel> compraCota(@PathVariable(value = "siglaFii") String siglaFii, @RequestPart("cotas") int numCotas, @RequestPart("valorCota") float valorCota) {
+    public ResponseEntity<Object> compraCota(@PathVariable(value = "siglaFii") String siglaFii, @RequestParam("cotas") int numCotas, @RequestParam("valorCota") long valorCota) {
         Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
-        System.out.println(fii + "OPTIONAL");
         try {
-            return null;//fins de teste
+            if (fii.isPresent()) {
+                FiiModel fiiModel = fii.get();
+
+                fiiModel.setNumCotas(fiiModel.getNumCotas() + numCotas);
+                fiiModel.setPL(fiiModel.getPL() + (numCotas * valorCota));
+
+                fiiRepository.save(fiiModel);
+                return ResponseEntity.status(HttpStatus.OK).body(fiiModel);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FII NOT FOUND");
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();

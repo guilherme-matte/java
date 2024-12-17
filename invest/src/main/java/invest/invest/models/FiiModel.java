@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-@Table(name="tb_fii")
+@Table(name = "tb_fii")
 public class FiiModel extends RepresentationModel<FiiModel> implements Serializable {
-        private static  final long serialVersionUID = 1l;
+    private static final long serialVersionUID = 1l;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,9 +17,10 @@ public class FiiModel extends RepresentationModel<FiiModel> implements Serializa
     private UUID idFii;
     private String siglaFii;
     private String nomeFii;
-    private Long PL;
+    private float PL;
     private int numCotas;
     private String tipo;
+    private float dividendo;
 
 
     public UUID getIdFii() {
@@ -46,11 +47,11 @@ public class FiiModel extends RepresentationModel<FiiModel> implements Serializa
         this.nomeFii = nomeFii;
     }
 
-    public Long getPL() {
+    public float getPL() {
         return PL;
     }
 
-    public void setPL(Long PL) {
+    public void setPL(float PL) {
         this.PL = PL;
     }
 
@@ -68,5 +69,13 @@ public class FiiModel extends RepresentationModel<FiiModel> implements Serializa
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public float getDividendo() {
+        return dividendo;
+    }
+
+    public void setDividendo(float dividendo) {
+        this.dividendo = dividendo;
     }
 }

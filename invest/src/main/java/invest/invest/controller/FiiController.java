@@ -1,5 +1,7 @@
 package invest.invest.controller;
 
+import invest.invest.dto.DividendYieldDTO;
+import invest.invest.dto.TransacaoCotaDTO;
 import invest.invest.dto.FiiResponseDTO;
 import invest.invest.models.CalcularCota;
 import invest.invest.models.FiiModel;
@@ -7,6 +9,7 @@ import invest.invest.repositories.FiiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -31,8 +34,8 @@ public class FiiController {
         */
 
         try {
+            fiiModel.setDividendo(0f);
             FiiModel savedFii = fiiRepository.save(fiiModel);
-            System.out.println("Funcionou poha_1");
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFii);
 
 
@@ -67,15 +70,17 @@ public class FiiController {
     }
 
     @PutMapping("/buy/{siglaFii}")
-    public ResponseEntity<Object> compraCota(@PathVariable(value = "siglaFii") String siglaFii, @RequestParam("cotas") int numCotas, @RequestParam("valorCota") long valorCota) {
+    public ResponseEntity<Object> compraCota(@PathVariable(value = "siglaFii") String siglaFii, @RequestBody TransacaoCotaDTO transacaoCotaDTO) {
         Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
         try {
             if (fii.isPresent()) {
                 FiiModel fiiModel = fii.get();
 
-                fiiModel.setNumCotas(fiiModel.getNumCotas() + numCotas);
-                fiiModel.setPL(fiiModel.getPL() + (numCotas * valorCota));
+                fiiModel.setNumCotas(fiiModel.getNumCotas() + transacaoCotaDTO.getCotas());
+                fiiModel.setPL(fiiModel.getPL() + (transacaoCotaDTO.getCotas() * transacaoCotaDTO.getValorCota()));
 
+
+                System.out.println(transacaoCotaDTO.getValorCota());
                 fiiRepository.save(fiiModel);
                 return ResponseEntity.status(HttpStatus.OK).body(fiiModel);
             } else {
@@ -89,4 +94,53 @@ public class FiiController {
         }
     }
 
+    @PutMapping("/sell/{siglaFii}")
+    public ResponseEntity<Object> vendaCota(@PathVariable(value = "siglaFii") String siglaFii, @RequestBody TransacaoCotaDTO transacaoCotaDTO) {
+        Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
+        try {
+            if (fii.isPresent()) {
+                FiiModel fiiModel = fii.get();
+
+                fiiModel.setNumCotas(fiiModel.getNumCotas() - transacaoCotaDTO.getCotas());
+                fiiModel.setPL(fiiModel.getPL() - (transacaoCotaDTO.getCotas() * transacaoCotaDTO.getValorCota()));
+                fiiRepository.save(fiiModel);
+                return ResponseEntity.status(HttpStatus.OK).body(fiiModel);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FII NOT FOUND");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PutMapping("/DY/{siglaFii}")
+    public ResponseEntity<Object> calcularDY(@PathVariable(value = "siglaFii") String siglaFii, @RequestBody DividendYieldDTO dividendYieldDTO) {
+        Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
+        try {
+            if (fii.isPresent()) {
+                FiiModel fiiModel = fii.get();
+                int numCotas = fiiModel.getNumCotas();
+                float lucro = dividendYieldDTO.getLucroDistribuido();
+
+                if (numCotas <= 0 ){
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O número de cotas não pode ser igual ou menor que 0");
+                }
+
+                fiiModel.setDividendo(lucro/numCotas);
+                System.out.println(lucro+" - "+numCotas);
+                fiiRepository.save(fiiModel);
+
+                return ResponseEntity.status(HttpStatus.OK).body(fiiModel);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FII NOT FOUND");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }
+

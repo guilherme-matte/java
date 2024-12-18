@@ -6,18 +6,21 @@ import invest.invest.dto.FiiResponseDTO;
 import invest.invest.models.CalcularCota;
 import invest.invest.models.FiiModel;
 import invest.invest.repositories.FiiRepository;
+import invest.invest.services.FiiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class FiiController {
     @Autowired
     FiiRepository fiiRepository;
+    @Autowired
+    FiiService fiiService ;
+
 
     @PostMapping("/create")
     public ResponseEntity<FiiModel> saveFii(@RequestBody FiiModel fiiModel) {
@@ -116,6 +119,31 @@ public class FiiController {
         }
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<List<Map<String, Object>>> getAllFiis() {
+        List<FiiModel> fiiModelList = fiiRepository.findAll();
+        List<Map<String, Object>> response = new ArrayList<>();
+        if (!fiiModelList.isEmpty()) {
+            for (FiiModel fiiModel : fiiModelList) {
+                Map<String, Object> fiiData = new HashMap<>();
+                fiiData.put("idFii", fiiModel.getIdFii());
+                fiiData.put("siglaFii", fiiModel.getSiglaFii());
+                fiiData.put("nomeFii", fiiModel.getNomeFii());
+                fiiData.put("PL", fiiModel.getPL());
+                fiiData.put("numCotas", fiiModel.getNumCotas());
+                fiiData.put("tipo", fiiModel.getTipo());
+                fiiData.put("dividendo", fiiService.calcularDividendo(fiiModel));
+
+
+                response.add(fiiData);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+    }
+
     @PutMapping("/DY/{siglaFii}")
     public ResponseEntity<Object> calcularDY(@PathVariable(value = "siglaFii") String siglaFii, @RequestBody DividendYieldDTO dividendYieldDTO) {
         Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
@@ -125,12 +153,12 @@ public class FiiController {
                 int numCotas = fiiModel.getNumCotas();
                 float lucro = dividendYieldDTO.getLucroDistribuido();
 
-                if (numCotas <= 0 ){
+                if (numCotas <= 0) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O número de cotas não pode ser igual ou menor que 0");
                 }
 
-                fiiModel.setDividendo(lucro/numCotas);
-                System.out.println(lucro+" - "+numCotas);
+                fiiModel.setDividendo(lucro / numCotas);
+                System.out.println(lucro + " - " + numCotas);
                 fiiRepository.save(fiiModel);
 
                 return ResponseEntity.status(HttpStatus.OK).body(fiiModel);

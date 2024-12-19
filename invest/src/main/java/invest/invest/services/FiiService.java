@@ -13,8 +13,11 @@ public class FiiService {
 
 
     public float calcularDividendo(FiiModel fiiModel) {
-
-        return fiiModel.getPL() / fiiModel.getNumCotas();
+        if (fiiModel.getNumCotas() == 0) {
+            return 0;
+        } else {
+            return fiiModel.getPL() / fiiModel.getNumCotas();
+        }
     }
 
     public void comprarCota(int quantidadeCotas, FiiModel fiiModel) {

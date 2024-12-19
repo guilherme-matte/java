@@ -19,7 +19,7 @@ public class FiiController {
     @Autowired
     FiiRepository fiiRepository;
     @Autowired
-    FiiService fiiService ;
+    FiiService fiiService;
 
 
     @PostMapping("/create")
@@ -133,7 +133,7 @@ public class FiiController {
                 fiiData.put("numCotas", fiiModel.getNumCotas());
                 fiiData.put("tipo", fiiModel.getTipo());
                 fiiData.put("dividendo", fiiService.calcularDividendo(fiiModel));
-
+                fiiData.put("dividendYield", fiiService.calcularDY(fiiModel));
 
                 response.add(fiiData);
             }

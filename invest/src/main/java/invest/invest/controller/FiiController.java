@@ -77,14 +77,13 @@ public class FiiController {
         Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
         try {
             if (fii.isPresent()) {
+
                 FiiModel fiiModel = fii.get();
 
-                fiiModel.setNumCotas(fiiModel.getNumCotas() + transacaoCotaDTO.getCotas());
-                fiiModel.setPL(fiiModel.getPL() + (transacaoCotaDTO.getCotas() * transacaoCotaDTO.getValorCota()));
+                fiiService.comprarCota(transacaoCotaDTO.getCotas(), fiiModel);
 
-
-                System.out.println(transacaoCotaDTO.getValorCota());
                 fiiRepository.save(fiiModel);
+
                 return ResponseEntity.status(HttpStatus.OK).body(fiiModel);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FII NOT FOUND");
@@ -102,11 +101,13 @@ public class FiiController {
         Optional<FiiModel> fii = fiiRepository.findBySiglaFii(siglaFii.toUpperCase());
         try {
             if (fii.isPresent()) {
+
                 FiiModel fiiModel = fii.get();
 
-                fiiModel.setNumCotas(fiiModel.getNumCotas() - transacaoCotaDTO.getCotas());
-                fiiModel.setPL(fiiModel.getPL() - (transacaoCotaDTO.getCotas() * transacaoCotaDTO.getValorCota()));
+                fiiService.venderCota(transacaoCotaDTO.getCotas(), fiiModel);
+
                 fiiRepository.save(fiiModel);
+
                 return ResponseEntity.status(HttpStatus.OK).body(fiiModel);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FII NOT FOUND");

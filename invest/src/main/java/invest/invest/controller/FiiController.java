@@ -133,7 +133,7 @@ public class FiiController {
                 fiiData.put("PL", fiiModel.getPL());
                 fiiData.put("numCotas", fiiModel.getNumCotas());
                 fiiData.put("tipo", fiiModel.getTipo());
-                fiiData.put("dividendo", fiiService.calcularDividendo(fiiModel));
+                fiiData.put("dividend", fiiService.calcularDividendo(fiiModel));
                 fiiData.put("dividendYield", fiiService.calcularDY(fiiModel));
 
                 response.add(fiiData);

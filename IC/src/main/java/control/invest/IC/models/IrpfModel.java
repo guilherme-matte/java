@@ -1,14 +1,12 @@
 package control.invest.IC.models;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tb_irpf")
+
 public class IrpfModel extends RepresentationModel<IrpfModel> implements Serializable {
 
     //classe para fins de teste, futuramente serão adicionados outros tipos de rendimentos

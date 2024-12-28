@@ -29,6 +29,8 @@ public class StringExtract {
         return extractValue(Text, "\\s*(\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2})\\s+(.+)");
     }
     public String StringToArray(String text){
-        List<String> words = Arrays.asList(text.split("\\s+"))
+        List<String> words = Arrays.asList(text.split("\\s+"));
+
+        int targetIndex = words.indexOf("");//parei aqui!!!
     }
 }

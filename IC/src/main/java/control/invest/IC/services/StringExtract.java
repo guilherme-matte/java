@@ -2,6 +2,8 @@ package control.invest.IC.services;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,5 +27,8 @@ public class StringExtract {
 
     public String extractCnpj(String Text) {
         return extractValue(Text, "\\s*(\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2})\\s+(.+)");
+    }
+    public String StringToArray(String text){
+        List<String> words = Arrays.asList(text.split("\\s+"))
     }
 }

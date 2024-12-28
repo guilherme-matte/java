@@ -2,6 +2,7 @@ package control.invest.IC.controller;
 
 import control.invest.IC.services.ImageToTextService;
 import control.invest.IC.services.PdfToImageService;
+import control.invest.IC.services.StringExtract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,10 @@ public class PdfController {
             String extractedText = imageToTextService.extractTextFromImages(imageFiles);
 
             tempPdf.delete();
+
+            StringExtract stringExtract = new StringExtract();
+            System.out.println(stringExtract.extractCnpj(extractedText));
+
             return ResponseEntity.ok(extractedText);
         } catch (IOException e) {
             e.printStackTrace();

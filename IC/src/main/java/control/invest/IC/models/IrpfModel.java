@@ -30,6 +30,7 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
 
     // rendimentos exclusivos
     private double impRendDecTerc;
+    private double decTercSal;
 
     //rendimentos acumulados
     private double pensao;
@@ -37,7 +38,7 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     //pagamento dedutiveis
     private String cnpjEmpresaPagDedutivel;
     private String nomeEmpresaPagDedutivel;
-    private double valorEmpresaPAgDedutivel;
+    private double valorEmpresaPagDedutivel;
 
     public UUID getIdIrpf() {
         return idIrpf;
@@ -152,10 +153,18 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     }
 
     public double getValorEmpresaPagDedutivel() {
-        return valorEmpresaPAgDedutivel;
+        return valorEmpresaPagDedutivel;
     }
 
     public void setValorEmpresaPagDedutivel(double valorEmpresaPAgDedutivel) {
-        this.valorEmpresaPAgDedutivel = valorEmpresaPAgDedutivel;
+        this.valorEmpresaPagDedutivel = valorEmpresaPAgDedutivel;
+    }
+
+    public double getDecTercSal() {
+        return decTercSal;
+    }
+
+    public void setDecTercSal(double decTercSal) {
+        this.decTercSal = decTercSal;
     }
 }

@@ -22,7 +22,7 @@ public class PdfToImageService {
             int pageCount = document.getNumberOfPages();
 
             for (int i = 0; i < pageCount; i++) {
-                BufferedImage image = pdfRenderer.renderImageWithDPI(i, 600);
+                BufferedImage image = pdfRenderer.renderImageWithDPI(i, 700);
                 File tempImage = File.createTempFile("page_" + i, ".png");
                 ImageIO.write(image, "png", tempImage);
                 imageFile.add(tempImage);

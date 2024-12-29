@@ -31,26 +31,36 @@ public class StringExtractService {
     }
 
     public String extractValor(String Text) {
-        String regex = "\\s+(.+?)\\s+(\\d{1,3}(\\.\\d{3})*,\\d{2})";
+        // Regex para capturar o texto e valor
+        String regex = "\\s*(\\D+?)\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(Text);
 
-
         while (matcher.find()) {
+            // Extrair o texto e o valor
             String texto = matcher.group(1);
             String valor = matcher.group(2);
-            valor = valor.replace(".", "").replace(",", ".");
-            Double number = Double.parseDouble(valor);
 
-            if (number != 0.00) {
-                return texto + " " + valor;
+            valor = valor.replace(".", "");
+            valor = valor.replace(",", ".");
+
+
+            try {
+                Double number = Double.parseDouble(valor);
+
+                // Verifica se o número é diferente de 0.00
+                if (number != 0.00) {
+                    return texto + " " + number;
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
         return null;
     }
 
 
-    public void SplitLines(String text) {
+    public IrpfModel extrairValores(String text) {
         try {
             IrpfModel irpfModel = new IrpfModel();
             String[] lines = text.split("\\n");
@@ -59,7 +69,7 @@ public class StringExtractService {
 
             for (String line : lines) {
 
-                //
+                //System.out.println(line);
                 if (extractCnpj(line) != null) {
                     String regex = "\\s*(\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2})\\s+(.+)";
                     Pattern pattern = Pattern.compile(regex);
@@ -73,7 +83,7 @@ public class StringExtractService {
                             fp = true;
                         } else {
                             irpfModel.setCnpjEmpresaPagDedutivel(matcher.group(1));
-                            irpfModel.setNomeEmpresaPagDedutivel(matcher.group(2));
+                            irpfModel.setNomeEmpresaPagDedutivel(matcher.group(2).replace("-", "").trim());
 
                         }
                     }
@@ -91,41 +101,42 @@ public class StringExtractService {
 
                 }
                 if (extractValor(line) != null) {
-                    String regex = "\\s+(.+?)\\s+(\\d{1,3}(\\.\\d{3})*,\\d{2})";
+                    String regex = "\\s*(\\D+?)\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})";
                     Pattern pattern = Pattern.compile(regex);
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
-                        String op = matcher.group(1);
-                        System.out.println(matcher.group(1));
+                        String op = matcher.group(1).replace(".", "").trim();
+                        System.out.println(op);
+                        System.out.println(matcher.group(2));
                         if (Objects.equals(op, "Total dos rendimentos (inclusive férias)")) {
-                            irpfModel.setRendimentosTotais(Double.parseDouble(matcher.group(2)));
-                            System.out.println(irpfModel.getRendimentosTotais());
+                            irpfModel.setRendimentosTotais(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
                         }
                         if (Objects.equals(op, "Contribuição previdenciária oficial")) {
-                            irpfModel.setPrevSocial(Double.parseDouble(matcher.group(2)));
-                            System.out.println("Rendimento total: " + irpfModel.getPrevSocial());
+                            irpfModel.setPrevSocial(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
                         }
                         if (Objects.equals(op, "Imposto sobre a renda retido na fonte")) {
-                            irpfModel.setImpostoRetido(Double.parseDouble(matcher.group(2)));
-                            System.out.println("IRPF retido: " + irpfModel.getImpostoRetido());
+                            irpfModel.setImpostoRetido(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
                         }
-                        if (Objects.equals(op, "Imposto sobre a renda retido na fonte sobre 13º salário")) {
-                            irpfModel.setImpRendDecTerc(Double.parseDouble(matcher.group(2)));
-                            System.out.println("imp retido Decimo terceiro" + irpfModel.getImpRendDecTerc());
+                        if (Objects.equals(op, "Décimo terceiro salário")) {
+                            irpfModel.setDecTercSal(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
                         }
-                        if (Objects.equals(op, "pago no ano referente ao titular: R$")) {
-                            irpfModel.setValorEmpresaPagDedutivel(Double.parseDouble(matcher.group(2)));
-                            System.out.println(irpfModel.getValorEmpresaPagDedutivel());
+                        if (Objects.equals(op, "º salário")) {
+                            irpfModel.setImpRendDecTerc(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
                         }
+                        if (Objects.equals(op, "Valor pago no ano referente ao titular: R$")) {
+                            irpfModel.setValorEmpresaPagDedutivel(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
+                        }
+
                         //Criar outros depois
                     }
                 }
 
                 num += 1;
             }
+            return irpfModel;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return null;
     }
 }

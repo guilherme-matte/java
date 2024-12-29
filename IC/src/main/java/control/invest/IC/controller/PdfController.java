@@ -2,7 +2,7 @@ package control.invest.IC.controller;
 
 import control.invest.IC.services.ImageToTextService;
 import control.invest.IC.services.PdfToImageService;
-import control.invest.IC.services.StringExtract;
+import control.invest.IC.services.StringExtractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,6 @@ public class PdfController {
     private final PdfToImageService pdfToImageService;
     private final ImageToTextService imageToTextService;
 
-    public StringEx
 
     public PdfController(PdfToImageService pdfToImageService, ImageToTextService imageToTextService) {
         this.pdfToImageService = pdfToImageService;
@@ -38,10 +37,11 @@ public class PdfController {
             String extractedText = imageToTextService.extractTextFromImages(imageFiles);
 
             tempPdf.delete();
+            StringExtractService stringExtractService = new StringExtractService();
 
+            stringExtractService.SplitLines(extractedText);
 
-
-            return ResponseEntity.ok(extractedText);
+            return ResponseEntity.ok(null);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar arquivo");

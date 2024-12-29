@@ -21,6 +21,7 @@ public class PdfController {
     private final PdfToImageService pdfToImageService;
     private final ImageToTextService imageToTextService;
 
+    public StringEx
 
     public PdfController(PdfToImageService pdfToImageService, ImageToTextService imageToTextService) {
         this.pdfToImageService = pdfToImageService;
@@ -38,8 +39,7 @@ public class PdfController {
 
             tempPdf.delete();
 
-            StringExtract stringExtract = new StringExtract();
-            System.out.println(stringExtract.extractCnpj(extractedText));
+
 
             return ResponseEntity.ok(extractedText);
         } catch (IOException e) {

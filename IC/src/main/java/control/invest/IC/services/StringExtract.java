@@ -28,9 +28,20 @@ public class StringExtract {
     public String extractCnpj(String Text) {
         return extractValue(Text, "\\s*(\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2})\\s+(.+)");
     }
-    public String StringToArray(String text){
-        List<String> words = Arrays.asList(text.split("\\s+"));
 
-        int targetIndex = words.indexOf("");//parei aqui!!!
+    public String StringToArray(String text) {
+        return List < String > words = Arrays.asList(text.split("\\s+"));
+
     }
 }
+
+public void SplitLines(String text) {
+    String[] lines = text.split("\\s{2,}");
+    for (String line : lines) {
+        System.out.println(line.trim());
+    }
+
+}
+
+
+

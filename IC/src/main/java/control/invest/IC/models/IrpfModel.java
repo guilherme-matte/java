@@ -21,19 +21,35 @@ public class IrpfModel extends RepresentationModel<IrpfModel> implements Seriali
     //rendimentos tributaveis
     private double rendimentosTotais;
     private double prevSocial;
+    private double fapi;
+    private double pensao;
     private double impostoRetido;
 
     // rendimentos isentos
+    private double parcelaIsentaApos;
+    private double parcelaIsentaDecTerc;
+    private double ajudaCusto;
+    private double acidenteTrabalho;
+    private double lucroDividendo;
     private double pagamentosRecebidos;//Pagamento realizado ao titular ou socio de micro empresa
+    private double rescisao;
+    private double jurosMora;
     private double outrosRendimentosIsentos;
 
 
     // rendimentos exclusivos
-    private double impRendDecTerc;
     private double decTercSal;
+    private double impRendDecTerc;
+    private double outrosRendExclusivo;
+
 
     //rendimentos acumulados
-    private double pensao;
+    private double totalRendTributavel;
+    private double despesaAcaoJud;
+    private double contribPrevSocial;
+    private double pensaoRecebida;
+    private double impostoRetidoRendRec;
+    private double rendIsentos;
 
     //pagamento dedutiveis
     private String cnpjEmpresaPagDedutivel;

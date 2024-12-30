@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
+
 @Service
 public class ImageToTextService {
     public String extractTextFromImages(List<File> imageFiles) {
@@ -22,7 +23,7 @@ public class ImageToTextService {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                imageFile.delete();
+                //imageFile.delete();
             }
         }
         return extractedText.toString();

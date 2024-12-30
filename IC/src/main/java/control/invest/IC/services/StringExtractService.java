@@ -3,7 +3,9 @@ package control.invest.IC.services;
 import control.invest.IC.models.IrpfModel;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,26 +34,23 @@ public class StringExtractService {
 
     public String extractValor(String Text) {
         // Regex para capturar o texto e valor
-        String regex = "\\s*(\\D+?)\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})";
+        String regex = "(\\d{1,3}(?:\\.\\d{3})*,\\d{2})";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(Text);
 
-        while (matcher.find()) {
+        if (matcher.find()) {
             // Extrair o texto e o valor
-            String texto = matcher.group(1);
-            String valor = matcher.group(2);
+            String valor = matcher.group();
 
             valor = valor.replace(".", "");
             valor = valor.replace(",", ".");
 
 
             try {
-                Double number = Double.parseDouble(valor);
-
+                //Double number = Double.parseDouble(valor);
+                return matcher.group();
                 // Verifica se o número é diferente de 0.00
-                if (number != 0.00) {
-                    return texto + " " + number;
-                }
+
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -63,78 +62,41 @@ public class StringExtractService {
     public IrpfModel extrairValores(String text) {
         try {
             IrpfModel irpfModel = new IrpfModel();
+
             String[] lines = text.split("\\n");
-            int num = 1;
-            boolean fp = false;//verifica se a fonte pagadora ja foi armazenada
+
+            String regex = "(\\d{1,3}(?:\\.\\d{3})*,\\d{2})";
+            Pattern pattern = Pattern.compile(regex);
+
+            List<Double> extractedValues = new ArrayList<>();
+
 
             for (String line : lines) {
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    double value = Double.parseDouble(matcher.group().replace(".", "").replace(",", "."));
 
-                //System.out.println(line);
-                if (extractCnpj(line) != null) {
-                    String regex = "\\s*(\\d{2}\\.\\d{3}\\.\\d{3}\\/\\d{4}\\-\\d{2})\\s+(.+)";
-                    Pattern pattern = Pattern.compile(regex);
-                    Matcher matcher = pattern.matcher(line);
-
-
-                    if (matcher.find()) {
-                        if (fp == false) {
-                            irpfModel.setFontePagadoraCnpj(matcher.group(1));
-                            irpfModel.setFontePagadoraNomeEmpresa(matcher.group(2));
-                            fp = true;
-                        } else {
-                            irpfModel.setCnpjEmpresaPagDedutivel(matcher.group(1));
-                            irpfModel.setNomeEmpresaPagDedutivel(matcher.group(2).replace("-", "").trim());
-
-                        }
-                    }
+                    extractedValues.add(value);
 
 
                 }
-                if (extractCpf(line) != null) {
-                    String regex = "\\s*(\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})\\s+(.+)";
-                    Pattern pattern = Pattern.compile(regex);
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        irpfModel.setCpf(matcher.group(1));
-                        irpfModel.setNomePessoaFisica(matcher.group(2));
-                    }
-
-                }
-                if (extractValor(line) != null) {
-                    String regex = "\\s*(\\D+?)\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})";
-                    Pattern pattern = Pattern.compile(regex);
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        String op = matcher.group(1).replace(".", "").trim();
-                        System.out.println(op);
-                        System.out.println(matcher.group(2));
-                        if (Objects.equals(op, "Total dos rendimentos (inclusive férias)")) {
-                            irpfModel.setRendimentosTotais(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
-                        }
-                        if (Objects.equals(op, "Contribuição previdenciária oficial")) {
-                            irpfModel.setPrevSocial(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
-                        }
-                        if (Objects.equals(op, "Imposto sobre a renda retido na fonte")) {
-                            irpfModel.setImpostoRetido(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
-                        }
-                        if (Objects.equals(op, "Décimo terceiro salário")) {
-                            irpfModel.setDecTercSal(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
-                        }
-                        if (Objects.equals(op, "º salário")) {
-                            irpfModel.setImpRendDecTerc(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
-                        }
-                        if (Objects.equals(op, "Valor pago no ano referente ao titular: R$")) {
-                            irpfModel.setValorEmpresaPagDedutivel(Double.parseDouble(matcher.group(2).replace(".", "").replace(",", ".")));
-                        }
-
-                        //Criar outros depois
-                    }
-                }
-
-                num += 1;
             }
+
+            Field[] fields = IrpfModel.class.getDeclaredFields();
+            int index = 0;
+
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.getType().equals(double.class) && index < extractedValues.size()) {
+                    field.set(irpfModel, extractedValues.get(index));
+                    index++;
+                }
+            }
+
             return irpfModel;
-        } catch (Exception e) {
+            
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
         return null;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,9 +37,13 @@ public class PdfController {
         try {
             File tempPdf = File.createTempFile("uploaded", ".pdf");
             file.transferTo(tempPdf);
-
-            List<File> imageFiles = pdfToImageService.convertPdfToImages(tempPdf);
-            String extractedText = imageToTextService.extractTextFromImages(imageFiles);
+            Rectangle regionValores = new Rectangle(510, 230, 70, 450);
+            List<File> imageFilesValores = pdfToImageService.convertPdfToImages(tempPdf, regionValores,"valores");
+            Rectangle regionCabecalho = new Rectangle(30, 125, 420, 80);
+            List<File> imageFilesCabecalho = pdfToImageService.convertPdfToImages(tempPdf,regionCabecalho,"cabecalho");
+            Rectangle regionPagamentos = new Rectangle(15, 655, 520, 100);
+            List<File> imageFilespagamentos = pdfToImageService.convertPdfToImages(tempPdf,regionPagamentos,"pagamentos");
+            String extractedText = imageToTextService.extractTextFromImages(imageFilesValores);
 
             tempPdf.delete();
             StringExtractService stringExtractService = new StringExtractService();

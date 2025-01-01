@@ -47,9 +47,7 @@ public class StringExtractService {
 
 
             try {
-                //Double number = Double.parseDouble(valor);
                 return matcher.group();
-                // Verifica se o número é diferente de 0.00
 
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -94,7 +92,7 @@ public class StringExtractService {
             }
 
             return irpfModel;
-            
+
         } catch (
                 Exception e) {
             e.printStackTrace();
